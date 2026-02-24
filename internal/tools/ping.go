@@ -1,15 +1,21 @@
 package tools
 
 import (
-	mcp "github.com/metoro-io/mcp-golang"
+	"context"
+
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
 )
 
-type PingArgs struct{}
-
-func Register(s *mcp.Server) {
-	s.RegisterTool("ping", "Health check", handlePing)
+func Register(s *server.MCPServer) {
+	s.AddTool(
+		mcp.NewTool("ping",
+			mcp.WithDescription("Health check"),
+		),
+		handlePing,
+	)
 }
 
-func handlePing(args PingArgs) (*mcp.ToolResponse, error) {
-	return mcp.NewToolResponse(mcp.NewTextContent("pong")), nil
+func handlePing(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	return mcp.NewToolResultText("pong"), nil
 }

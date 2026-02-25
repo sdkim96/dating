@@ -7,7 +7,7 @@ import (
 	"github.com/mark3labs/mcp-go/server"
 )
 
-func Register(s *server.MCPServer) {
+func RegisterPing(s *server.MCPServer) {
 	s.AddTool(
 		mcp.NewTool("ping",
 			mcp.WithDescription("Health check"),

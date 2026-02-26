@@ -24,3 +24,5 @@ type CompanyMeta struct {
 	WorkerCount    *int   `json:"worker_count,omitempty"`
 	Revenue        *int64 `json:"revenue,omitempty"`
 }
+
+const tenant = "cards"

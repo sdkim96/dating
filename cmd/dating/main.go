@@ -4,7 +4,8 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/sdkim96/dating/internal/server"
+	"github.com/sdkim96/dating/internal/app"
+	"github.com/sdkim96/dating/internal/config"
 )
 
 func main() {
@@ -12,16 +13,21 @@ func main() {
 	addr := flag.String("addr", ":8080", "http listen address")
 	flag.Parse()
 
-	var err error
+	cfg, err := config.Load()
+	if err != nil {
+		fmt.Printf("failed to load config: %v\n", err)
+		return
+	}
+
 	switch *mode {
 	case "stdio":
-		err = server.RunStdio()
+		err = app.RunStdio(cfg)
 	case "http":
 		fmt.Printf("listening on %s (stateless)\n", *addr)
-		err = server.RunHTTPStateless(*addr)
+		err = app.RunHTTPStateless(cfg, *addr)
 	case "http-stateful":
 		fmt.Printf("listening on %s (stateful)\n", *addr)
-		err = server.RunHTTPStateful(*addr)
+		err = app.RunHTTPStateful(cfg, *addr)
 	default:
 		err = fmt.Errorf("unknown mode: %s", *mode)
 	}

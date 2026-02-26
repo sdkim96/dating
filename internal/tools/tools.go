@@ -1,18 +1,16 @@
 package tools
 
 import (
-	"crypto/sha256"
 	"encoding/json"
-	"fmt"
 
 	"github.com/mark3labs/mcp-go/server"
-	"github.com/sdkim96/dating/internal/card"
+	"github.com/sdkim96/dating/internal/db"
 )
 
-func Register(s *server.MCPServer) {
+func Register(s *server.MCPServer, db *db.Engine) {
 	RegisterPing(s)
-	RegisterCreateCard(s)
-	RegisterListCards(s)
+	RegisterCreateCard(s, db)
+	RegisterListCards(s, db)
 }
 
 func ConvertMCPRequest[T any](m map[string]any) (T, error) {
@@ -24,10 +22,4 @@ func ConvertMCPRequest[T any](m map[string]any) (T, error) {
 
 	err = json.Unmarshal(b, &result)
 	return result, err
-}
-
-func HashCardID(card card.CardCreate) string {
-	// For simplicity, we can use a hash of the name and position as the card ID.
-	// In a real application, you might want to use a more robust method for generating unique IDs.
-	return fmt.Sprintf("%x", sha256.Sum256([]byte(card.Human.Name+card.Position)))
 }
